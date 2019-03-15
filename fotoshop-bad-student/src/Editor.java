@@ -65,19 +65,7 @@ public class Editor {
         System.out.println("Type 'help' if you need help.");
         System.out.println();
         System.out.println("The current image is " + name);
-        System.out.print("Filters applied: ");
-        if (filter1 != null) {
-            System.out.print(filter1 + " ");
-        }
-        if (filter2 != null) {
-            System.out.print(filter2 + " ");
-        }
-        if (filter3 != null) {
-            System.out.print(filter3 + " ");
-        }
-        if (filter4 != null) {
-            System.out.print(filter4 + " ");
-        }
+        filterCheck();
         System.out.println();
     }
 
@@ -248,16 +236,8 @@ public class Editor {
             }
         }
         currentImage = tmpImage;
-
-        if (filter1 == null) {
-            filter1 = "mono";
-        } else if (filter2 == null) {
-            filter2 = "mono";
-        } else if (filter3 == null) {
-            filter3 = "mono";
-        } else if (filter4 == null) {
-            filter4 = "mono";
-        } 
+           filterApplied("mono");
+        
     }
     
     /**
@@ -283,15 +263,7 @@ public class Editor {
             }
         }
         currentImage = rotImage;
-        if (filter1 == null) {
-            filter1 = "flipH";
-        } else if (filter2 == null) {
-            filter2 = "flipH";
-        } else if (filter3 == null) {
-            filter3 = "flipH";
-        } else if (filter4 == null) {
-            filter4 = "flipH";
-        }
+        filterApplied("rot90");
     }
     
     /**
@@ -348,5 +320,33 @@ public class Editor {
         } else {
             return true;  // signal that we want to quit
         }
+    }
+    private void filterCheck(){
+    System.out.print("Filters applied: ");
+        if (filter1 != null) {
+            System.out.print(filter1 + " ");
+        }
+        if (filter2 != null) {
+            System.out.print(filter2 + " ");
+        }
+        if (filter3 != null) {
+            System.out.print(filter3 + " ");
+        }
+        if (filter4 != null) {
+            System.out.print(filter4 + " ");
+        }
+    }
+    
+    private void filterApplied(String S){
+   
+        if (filter1 == null) {
+            filter1 = S;
+        } else if (filter2 == null) {
+            filter2 = S;
+        } else if (filter3 == null) {
+            filter3 = S;
+        } else if (filter4 == null) {
+            filter4 = S;
+        } 
     }
 }
