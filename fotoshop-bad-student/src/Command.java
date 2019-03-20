@@ -1,6 +1,5 @@
-/**
- * This class is taken from the "World of Zuul" application. 
- * "World of Zuul" is a very simple, text based adventure game.  
+/*
+* "World of Zuul" is a very simple, text based adventure game.  
  *
  * This class holds information about a command that was issued by the user.
  * A command currently consists of two strings: a command word and a second
@@ -19,9 +18,12 @@
 
 public class Command
 {
-    private String commandWord;
-    private String secondWord;
-    private String thirdWord;
+    private String[] commandWords;
+    
+    
+//    private String commandWord;
+//    private String secondWord;
+//    private String thirdWord;
 
     /**
      * Create a command object. First and second word must be supplied, but
@@ -33,9 +35,14 @@ public class Command
      */
     public Command(String firstWord, String secondWord, String thirdWord)
     {
-        commandWord = firstWord;
-        this.secondWord = secondWord;
-        this.thirdWord = secondWord;
+        commandWords = new String[3];
+        commandWords[0] = firstWord;
+        commandWords[1] = secondWord;
+        commandWords[2] = thirdWord;
+        
+//        commandWord = firstWord;
+//        this.secondWord = secondWord;
+//        this.thirdWord = secondWord;
 
     }
 
@@ -44,35 +51,64 @@ public class Command
      * command was not understood, the result is null.
      * @return The command word.
      */
-    public String getCommandWord()
+    public String[] getCommandWord()
     {
-        return commandWord;
+       
+        String[] commandReturn = new String[3];
+        
+                
+        if (commandWords[0] != null){
+            commandReturn[0] = commandWords[0];
+        }
+        else {
+            commandReturn[0] = null;
+        }
+        if (commandWords[1] != null){
+            commandReturn[1] = commandWords[1];
+        }
+        else {
+            commandReturn[1] = null;
+        }
+        if (commandWords[2] != null){
+            commandReturn[2] = commandWords[2];
+        }
+        else {
+            commandReturn[2] = null;
+        }
+        
+        
+        return commandReturn;
+        
+        
+        
+        
+       
     }
 
-    /**
-     * @return The second word of this command. Returns null if there was no
-     * second word.
-     */
-    public String getSecondWord()
-    {
-        return secondWord;
-    }
-
-    /**
-     * @return The third word of this command. Returns null if there was no
-     * third word.
-     */
-    public String getThirdWord()
-    {
-        return secondWord;
-    }
+//    /**
+//     * @return The second word of this command. Returns null if there was no
+//     * second word.
+//     */
+//    public String getSecondWord()
+//    {
+//        return secondWord;
+//    }
+//
+//    /**
+//     * @return The third word of this command. Returns null if there was no
+//     * third word.
+//     */
+//    public String getThirdWord()
+//    {
+//        return secondWord;
+//    }
     
     /**
      * @return true if this command was not understood.
      */
     public boolean isUnknown()
     {
-        return (commandWord == null);
+        return (commandWords[0] == null);
     }
 
     /**
@@ -80,7 +116,7 @@ public class Command
      */
     public boolean hasSecondWord()
     {
-        return (secondWord != null);
+        return (commandWords[1] != null);
     }
     
     /**
@@ -88,7 +124,7 @@ public class Command
      */
     public boolean hasThirdWord()
     {
-        return (thirdWord != null);
+        return (commandWords[2] != null);
     }
 }
 

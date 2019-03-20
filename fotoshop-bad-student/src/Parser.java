@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  * This class is taken from the "World of Zuul" application. 
  * "World of Zuul" is a very simple, text based adventure game.  
@@ -21,16 +22,15 @@ public class Parser
 {
     private CommandWords commands;  // holds all valid command words
     private Scanner reader;         // source of command input
-    private ArrayList <String > CommandWords = new ArrayList <String>(); 
-    
+    public ArrayList<String> cmdwords = new ArrayList<String>();
     /**
      * Create a parser to read from the terminal window.
      */
     public Parser() 
     {
-        CommandWords();
-        //commands = new CommandWords();
+        setupCmdWords();
         reader = new Scanner(System.in);
+        
     }
 
     public void setInputStream(FileInputStream str) { 
@@ -65,7 +65,8 @@ public class Parser
 
         // Now check whether this word is known. If so, create a command
         // with it. If not, create a "null" command (for unknown command).
-        if(CommandWords.contains(word1)) {
+        if(cmdwords.contains(word1)) 
+        {
             return new Command(word1, word2, word3);
         }
         else {
@@ -73,17 +74,18 @@ public class Parser
         }
     }
     
-    public void CommandWords(){
-        CommandWords.add(commands.HELP.toString());
-        CommandWords.add(commands.LOOK.toString());
-        CommandWords.add(commands.MONO.toString());
-        CommandWords.add(commands.OPEN.toString());
-        CommandWords.add(commands.QUIT.toString());
-        CommandWords.add(commands.ROT90.toString());
-        CommandWords.add(commands.SAVE.toString());
-        CommandWords.add(commands.SCRIPT.toString());
 
-                                
-
+    public void setupCmdWords() {
+        
+    cmdwords.add(commands.HELP.toString());
+    cmdwords.add(commands.LOOK.toString());
+    cmdwords.add(commands.MONO.toString());
+    cmdwords.add(commands.OPEN.toString());
+    cmdwords.add(commands.QUIT.toString());
+    cmdwords.add(commands.ROT90.toString());
+    cmdwords.add(commands.SAVE.toString());
+    cmdwords.add(commands.SCRIPT.toString());
+    cmdwords.add(commands.FLIPH.toString());
     }
+    
 }

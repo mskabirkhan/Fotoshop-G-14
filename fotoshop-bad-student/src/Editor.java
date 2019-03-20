@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
+
 
 /**
  * This class is the main processing class of the Fotoshop application. 
@@ -23,20 +27,51 @@ import javax.imageio.ImageIO;
  */
 
 public class Editor {
-
+    filtermanagement fm;
     Parser parser;
     ColorImage currentImage;
     String name;
-    String filter1;
-    String filter2;
-    String filter3;
-    String filter4;
+    
+    String language = "en";
+    String country = "UK";
+    
+    Locale l = new Locale(language,country);
+    ResourceBundle r = ResourceBundle.getBundle("Bundle_en_UK", l);
+    
+    String welcome = r.getString("welcome");
+    String description = r.getString("description");
+    String help = r.getString("help");
+    String current = r.getString("current");
+    String farewell = r.getString("farewell");
+    String unknown = r.getString("unknown");
+    String fotoshop = r.getString("fotoshop");
+    String explain = r.getString("explain");
+    String cannot = r.getString("cannot");
+    String cwd = r.getString("cwd");
+    String open = r.getString("open");
+    String loaded = r.getString("loaded");
+    String save = r.getString("save");
+    String saved = r.getString("saved");
+    String find = r.getString("find");
+    String script = r.getString("script");
+    String panic = r.getString("panic");
+    String quit = r.getString("quit");
+    String file = r.getString("file");
+    String nme = r.getString("nme");
+    String noimg = r.getString("noimg");
+    String load = r.getString("load");
+    String hlp = r.getString("hlp");
+    
+    
+    
+    cache cacheImage = new cache();
    
     /**
      * Create the editor and initialise its parser.
      */
     public Editor() {
         parser = new Parser();
+        fm = new filtermanagement();
     }
 
     /**
@@ -60,24 +95,13 @@ public class Editor {
      */
     private void printWelcome() {
         System.out.println();
-        System.out.println("Welcome to Fotoshop!");
-        System.out.println("Fotoshop is an amazing new, image editing tool.");
-        System.out.println("Type 'help' if you need help.");
+        System.out.println(welcome);
+        System.out.println(description);
+        System.out.println(help);
         System.out.println();
-        System.out.println("The current image is " + name);
-        System.out.print("Filters applied: ");
-        if (filter1 != null) {
-            System.out.print(filter1 + " ");
-        }
-        if (filter2 != null) {
-            System.out.print(filter2 + " ");
-        }
-        if (filter3 != null) {
-            System.out.print(filter3 + " ");
-        }
-        if (filter4 != null) {
-            System.out.print(filter4 + " ");
-        }
+        System.out.println(current + name);
+        
+        fm.filterCheck();
         System.out.println();
     }
 
@@ -89,33 +113,35 @@ public class Editor {
      */
     private boolean processCommand(Command command) {
         boolean wantToQuit = false;
-
+        
         if (command.isUnknown()) {
-            System.out.println("I don't know what you mean...");
+            System.out.println(unknown);
             return false;
         }
 
-        String commandWord = command.getCommandWord();
-        if (commandWord.equals("help")) {
+        String [] commandWord = command.getCommandWord(); /// new change
+        if (commandWord[0].equals("help")) {
             printHelp();
-        } else if (commandWord.equals("open")) {
+        } else if (commandWord[0].equals("open")) {
             open(command);
-        } else if (commandWord.equals("save")) {
+        } else if (commandWord[0].equals("save")) {
             save(command);
-        } else if (commandWord.equals("mono")) {
+        } else if (commandWord[0].equals("mono")) {
             mono(command);
-        } else if (commandWord.equals("rot90")) {
+        } else if (commandWord[0].equals("rot90")) {
             rot90(command);
-        } else if (commandWord.equals("look")) {
+        } else if (commandWord[0].equals("fliph")) {
+            fliph(command);
+        } else if (commandWord[0].equals("look")) {
             look(command);
-        } else if (commandWord.equals("script")) {
+        } else if (commandWord[0].equals("script")) {
             wantToQuit = script(command);
-        } else if (commandWord.equals("quit")) {
+        } else if (commandWord[0].equals("quit")) {
             wantToQuit = quit(command);
-        }
+        } 
+
         return wantToQuit;
     }
-
 //----------------------------------
 // Implementations of user commands:
 //----------------------------------
@@ -125,10 +151,12 @@ public class Editor {
      * message and a list of the command words.
      */
     private void printHelp() {
-        System.out.println("You are using Fotoshop.");
+        System.out.println(fotoshop);
         System.out.println();
-        System.out.println("Your command words are:");
-        System.out.println("   open save look mono flipH rot90 help quit");
+        System.out.println(explain);
+        //System.out.println("   open save look mono fliph rot90 help quit script");
+        parser.cmdwords.forEach((n) -> System.out.print(n + " "));
+        System.out.println();
     }
 
     /**
@@ -141,8 +169,8 @@ public class Editor {
         try {
             img = new ColorImage(ImageIO.read(new File(name)));
         } catch (IOException e) {
-            System.out.println("Cannot find image file, " + name);
-            System.out.println("cwd is " + System.getProperty("user.dir"));
+            System.out.println(cannot + name);
+            System.out.println(cwd + System.getProperty("user.dir"));
         }
         return img;
     }
@@ -156,22 +184,22 @@ public class Editor {
     private void open(Command command) {
         if (!command.hasSecondWord()) {
             // if there is no second word, we don't know what to open...
-            System.out.println("open what?");
+            System.out.println(open);
             return ;
         }
   
-        String inputName = command.getSecondWord();
-        ColorImage img = loadImage(inputName);
+        String[] inputName = command.getCommandWord();
+        ColorImage img = loadImage(inputName[1]);
         if (img == null) {
             printHelp();
         } else {
             currentImage = img;
-            name = inputName;
-            filter1 = null;
-            filter2 = null;
-            filter3 = null;
-            filter4 = null;
-            System.out.println("Loaded " + name);
+            name = inputName[1];
+           // fm.filter1 = null;
+            //fm.filter2 = null;
+            //fm.filter3 = null;
+            //fm.filter4 = null;
+            System.out.println(loaded + name);
         }
     }
 
@@ -181,25 +209,23 @@ public class Editor {
      * @param command the command given
      */
     private void save(Command command) {
-        if (currentImage == null) {
-            printHelp();
-            return;
-        }
+        if(isImage()==false){return;};
         if (!command.hasSecondWord()) {
             // if there is no second word, we don't know where to save...
-            System.out.println("save where?");
+            System.out.println(save);
             return ;
         }
   
-        String outputName = command.getSecondWord();
+        String[] outputName = command.getCommandWord();
         try {
-            File outputFile = new File(outputName);
+            File outputFile = new File(outputName[1]);
             ImageIO.write(currentImage, "jpg", outputFile);
-            System.out.println("Image saved to " + outputName);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            printHelp();
-        }
+            ImageIO.write(currentImage, "png", outputFile);
+            System.out.println(saved + outputName[1]);
+        } catch (Exception e){
+            System.out.println("\n " + file + "\n " + nme);    
+        } 
+        
     }
 
     /**
@@ -207,20 +233,9 @@ public class Editor {
      * @param command the command given.
      */
     private void look(Command command) {
-        System.out.println("The current image is " + name);
-        System.out.print("Filters applied: ");
-        if (filter1 != null) {
-            System.out.print(filter1 + " ");
-        }
-        if (filter2 != null) {
-            System.out.print(filter2 + " ");
-        }
-        if (filter3 != null) {
-            System.out.print(filter3 + " ");
-        }
-        if (filter4 != null) {
-            System.out.print(filter4 + " ");
-        }
+        if(isImage()==false){return;};
+        System.out.println(current + name);
+        fm.filterCheck();
         System.out.println();
     }
 
@@ -229,15 +244,14 @@ public class Editor {
      * @param command the command given.
      */
     private void mono(Command command) {
-        if (filter4 != null) {
-            System.out.println("Filter pipeline exceeded");
-            return;
-        }
-        
+        if(isImage()==false){return;}
+        fm.checklastFilter();
+        if(fm.ifFilterExist("mono")==false){return;}
         ColorImage tmpImage = new ColorImage(currentImage);
         //Graphics2D g2 = currentImage.createGraphics();
-        int height = tmpImage.getHeight();
-        int width = tmpImage.getWidth();
+        int height = currentImage.getHeight();
+        int width = currentImage.getWidth();
+        
         for (int y=0; y<height; y++) {
             for (int x=0; x<width; x++) {
                 Color pix = tmpImage.getPixel(x, y);
@@ -248,34 +262,25 @@ public class Editor {
             }
         }
         currentImage = tmpImage;
-
-        if (filter1 == null) {
-            filter1 = "mono";
-        } else if (filter2 == null) {
-            filter2 = "mono";
-        } else if (filter3 == null) {
-            filter3 = "mono";
-        } else if (filter4 == null) {
-            filter4 = "mono";
-        } 
-    }
+        fm.filterApplied("mono");
+         
     
+    }
     /**
      * "rot90" was entered. Rotate the current image 90 degrees. 
      * @param command the command given.
      */
     private void rot90(Command command) {
-        if (filter4 != null) {
-            System.out.println("Filter pipeline exceeded");
-            return;
-        }
-        
+        if(isImage()==false){return;};
+        fm.checklastFilter();
         // R90 = [0 -1, 1 0] rotates around origin
         // (x,y) -> (-y,x)
         // then transate -> (height-y, x)
         int height = currentImage.getHeight();
         int width = currentImage.getWidth();
+        
         ColorImage rotImage = new ColorImage(height, width);
+        
         for (int y=0; y<height; y++) { // in the rotated image
             for (int x=0; x<width; x++) {
                 Color pix = currentImage.getPixel(x,y);
@@ -283,15 +288,7 @@ public class Editor {
             }
         }
         currentImage = rotImage;
-        if (filter1 == null) {
-            filter1 = "flipH";
-        } else if (filter2 == null) {
-            filter2 = "flipH";
-        } else if (filter3 == null) {
-            filter3 = "flipH";
-        } else if (filter4 == null) {
-            filter4 = "flipH";
-        }
+        fm.filterApplied("rot90");
     }
     
     /**
@@ -305,15 +302,16 @@ public class Editor {
      * @return whether to quit.
      */
     private boolean script(Command command) {
+
         if (!command.hasSecondWord()) {
             // if there is no second word, we don't know what to open...
-            System.out.println("which script"); 
+            System.out.println(script); 
             return false;
         }
   
-        String scriptName = command.getSecondWord();
+        String[] scriptName = command.getCommandWord();
         Parser scriptParser = new Parser();
-        try (FileInputStream inputStream = new FileInputStream(scriptName)) {
+        try (FileInputStream inputStream = new FileInputStream(scriptName[1])) {
             scriptParser.setInputStream(inputStream);
             boolean finished = false;
             while (!finished) {
@@ -327,11 +325,11 @@ public class Editor {
             return finished;
         } 
         catch (FileNotFoundException ex) {
-            System.out.println("Cannot find " + scriptName);
+            System.out.println(find + scriptName[1]);
             return false;
         }
         catch (IOException ex) {
-            throw new RuntimeException("Panic: script barfed!");
+            throw new RuntimeException(panic);
         }
     }
     
@@ -343,10 +341,53 @@ public class Editor {
      */
     private boolean quit(Command command) {
         if (command.hasSecondWord()) {
-            System.out.println("Quit what?");
+            System.out.println(quit);
             return false;
         } else {
             return true;  // signal that we want to quit
         }
+    }
+    
+    
+    
+    private void fliph(Command command) {
+        if(isImage()==false){return;};
+        fm.checklastFilter();
+       
+        int height = currentImage.getHeight();
+        int width = currentImage.getWidth();
+     
+        ColorImage flipImage = new ColorImage(width, height);
+        
+        for(int y = 0;y < height; y++){
+            for(int x = 0; x < width; x++){
+                Color pix = currentImage.getPixel(x,y);
+                flipImage.setPixel( (width-1)-x , y , pix);
+            }
+        }
+        
+        currentImage = flipImage;
+        fm.filterApplied("Flip Horizontal");
+        put(name,name);
+    }
+    
+    
+    private void put(String name ,String path ) {
+        path = name ;
+        cacheImage.addImage(name, path);
+        fm.filterCheck();
+        
+    }
+    private void get(String nameincache) {
+        
+        cacheImage.getImage(nameincache);
+    }
+    
+    private boolean isImage() {
+        if (currentImage == null) {
+            System.out.println(noimg+ "\n"+ load + "\n" + hlp);
+            return false;
+    }
+        return true;
     }
 }
