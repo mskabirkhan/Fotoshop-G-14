@@ -1,3 +1,6 @@
+
+import java.util.Locale;
+
 /**
  * This is the main class for the Fotoshop application
  * 
@@ -6,6 +9,7 @@
  */
 public class Main {
    public static void main(String[] args) {
+       Locale.setDefault(Locale.CHINA);
         new Editor().edit();
     }
 }

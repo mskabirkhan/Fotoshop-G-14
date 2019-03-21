@@ -18,12 +18,8 @@
 
 public class Command
 {
+    //Creating a string array to contain all of the command words
     private String[] commandWords;
-    
-    
-//    private String commandWord;
-//    private String secondWord;
-//    private String thirdWord;
 
     /**
      * Create a command object. First and second word must be supplied, but
@@ -35,14 +31,12 @@ public class Command
      */
     public Command(String firstWord, String secondWord, String thirdWord)
     {
-        commandWords = new String[3];
+        //Making the array contain 3 elements 
+        commandWords = new String[3]; 
+        //Initialsing the command words 
         commandWords[0] = firstWord;
         commandWords[1] = secondWord;
         commandWords[2] = thirdWord;
-        
-//        commandWord = firstWord;
-//        this.secondWord = secondWord;
-//        this.thirdWord = secondWord;
 
     }
 
@@ -53,8 +47,9 @@ public class Command
      */
     public String[] getCommandWord()
     {
+        
        
-        String[] commandReturn = new String[3];
+        String[] commandReturn = new String[3]; //assigning the string array to an array called command return 
         
                 
         if (commandWords[0] != null){
@@ -78,31 +73,9 @@ public class Command
         
         
         return commandReturn;
-        
-        
-        
-        
-       
+               
     }
 
-//    /**
-//     * @return The second word of this command. Returns null if there was no
-//     * second word.
-//     */
-//    public String getSecondWord()
-//    {
-//        return secondWord;
-//    }
-//
-//    /**
-//     * @return The third word of this command. Returns null if there was no
-//     * third word.
-//     */
-//    public String getThirdWord()
-//    {
-//        return secondWord;
-//    }
-    
     /**
      * @return true if this command was not understood.
      */
