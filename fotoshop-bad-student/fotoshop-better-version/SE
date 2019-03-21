@@ -1,0 +1,25 @@
+public class CommandWords
+{
+    // a constant array that holds all valid command words
+    private static final String[] validCommands = {
+        "open", "save", "look", "mono", "rot90", "help", "quit", "script","put", "new"
+    };
+
+    /**
+     * Constructor - initialise the command words.
+     */
+    public CommandWords()
+    {
+       String[] Strings = new String[] // the array is zero which is assigned below
+       new String (1,"open");  
+       new String (2,"save");      
+       new String (3,"look");     
+       new String (4,"mono");
+       new String (5,"rot90"); 
+       new String (6,"help");   
+       new String (7,"quit");      
+       new String (8,"script");  
+       new String (9,"put");     
+       new String (1,"new");            
+               
+    };
