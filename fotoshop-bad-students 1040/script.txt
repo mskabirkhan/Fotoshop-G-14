@@ -1,0 +1,5 @@
+open input.jpg
+look
+rot90
+save output.jpg
+quit
